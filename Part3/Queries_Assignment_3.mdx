@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+-- Show the percentage increase or decrease in total crime gravity 
+-- with respect to the previous year for each state
+------------------------------------------------------------------
+
+-- formula variazione percentuale = (finale-iniziale/iniziale)*100
+-- Se si usa format_string non è necessario moltiplicare per 100
+-- l'iif sostituisce il possibile valore inf nella colonna diff_percent con 0%
+
+
+with member diff as
+([Date].[Year].currentmember, [Measures].[Crime Gravity])-
+([Date].[Year].prevmember, [Measures].[Crime Gravity])
+
+member diff_percent as
+iif (([Date].[Year].prevmember, [Measures].[Crime Gravity]) = 0, 0, 
+		diff/([Date].[Year].prevmember, [Measures].[Crime Gravity])),
+Format_String="Percent"
+
+select {[Measures].[Crime Gravity], diff, diff_percent} on columns,
+nonempty(([Custody].[State].[State], [Date].[Year].[Year])) on rows
+from [Group ID 42 DB];
+
+
+
+
+------------------------------------------------------------------
+-- For each gun, show the total crime gravity in percentage with
+-- respect to the total crime gravity of all the guns
+------------------------------------------------------------------
+
+with member total as
+([Gun].[Gun Type].parent, [Measures].[Crime Gravity])
+
+member gun_percent as
+[Measures].[Crime Gravity]/total,
+Format_String="Percent"
+
+select {[Measures].[Crime Gravity], gun_percent} on columns,
+nonempty( order([Gun].[Gun Type].[Gun Type], gun_percent, desc)) on rows
+from [Group ID 42 DB];
+
+
+------------------------------------------------------
+-- Show the average crime gravity score in each state.
+------------------------------------------------------
+
+-- average crime gravity per state
+with member avg_crime as
+avg([Custody].[incident Id].[Incident Id], [Measures].[Crime Gravity])
+
+select {[Measures].[Crime Gravity], avg_crime} on columns,
+nonempty([Custody].[State].[State]) on rows
+from [Group ID 42 DB];
+
+
+------------------------------------------------------
+-- Show the incidents having a total gravity score greater or 
+-- equal to the average gravity score in each state.
+------------------------------------------------------
+
+with member avg_crime as
+avg([Custody].[incident Id].[Incident Id], [Measures].[Crime Gravity])
+
+select {[Measures].[Crime Gravity]} on columns,
+nonempty( filter(([Custody].[State].[State], [Custody].[Incident Id].[Incident Id]), 
+					[Measures].[Crime Gravity]>=avg_crime)) on rows
+from [Group ID 42 DB];
+

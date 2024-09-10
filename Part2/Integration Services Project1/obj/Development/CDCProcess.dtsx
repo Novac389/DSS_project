@@ -1,0 +1,1105 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/7/2023 10:13:11 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-LH0C8I4A"
+  DTS:CreatorName="LAPTOP-LH0C8I4A\linov"
+  DTS:DTSID="{13A091C1-F497-4F8F-B9D4-168373DE86D7}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5314.0"
+  DTS:LocaleID="1040"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="3"
+  DTS:VersionGUID="{77557242-CD76-465E-9254-4FBB61ECBEB2}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[lds.di.unipi.it.lbi.lds1]"
+      DTS:CreationName="ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+      DTS:DTSID="{A2A67C6B-3827-45DD-AF0A-0AE452BB3B02}"
+      DTS:ObjectName="lds.di.unipi.it.lbi.lds1">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=lds.di.unipi.it;User ID=lds;Initial Catalog=lbi;Application Name=SSIS-Package1-{A2A67C6B-3827-45DD-AF0A-0AE452BB3B02}lds.di.unipi.it.lbi.lds1;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAtgpU5KzqbUW9MnmY/SET4gAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACBjCmjIgxeslG7rUB/8TYdZaJnt5AGJ40boSNwT8m/ZwAAAAAOgAAAAAIAACAAAABAiZ3lVr4Wua4XNARVnPoUhYdLPcy6G02UFqSIfbVQrRAAAAAfTF2xQw1dLC0TvsfksMZSQAAAAC1NqRET0LD2ZS5UJT9klqWEZhRQ3iDQYEbykM+gNhFzS2NWDHAkzLu6Qu3wlDUo2ARqklVhxXekT9dNms9/faQ</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E6B8B58F-A0CA-4B4B-BF51-893F0C94C4C9}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="CDC_State">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Attività Flusso di dati"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Attività Flusso di dati"
+      DTS:DTSID="{9D4AEC6F-2DA7-4AA3-812E-3001F301BE67}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Attività Flusso di dati"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Attività Flusso di dati\CDC Source"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+              description="Reads change data from a SQL Server change table making it available for processing by downstream data-flow components. Only changes within the current processing range determined by the CDC Control task are read"
+              name="CDC Source"
+              usesDispositions="true"
+              version="9">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="An SSIS string package variable to store the CDC state of the current CDC state."
+                  expressionType="Notify"
+                  name="StateVariable"
+                  typeConverter="Attunity.SqlServer.CDCSrc.PackageVariablesTypeConverter">User::CDC_State</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the content of the metadata columns and the rows returned. Modes starting with ‘All’ return all changes and modes starting with ‘Net’ return net changes."
+                  expressionType="Notify"
+                  name="CDCProcessingMode"
+                  typeConverter="Attunity.SqlServer.CDCSrc.CdcProcessingMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The name of the CDC capture instance. By default the capture instance name is in the form of &quot;&lt;owner&gt;_&lt;table&gt;&quot;. The actual table that stores the changes is the CDC table named &quot;cdc&quot;.&quot;&lt;capture-instance&gt;_CT&quot;"
+                  expressionType="Notify"
+                  name="CaptureInstance">dbo_census</property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time out."
+                  expressionType="Notify"
+                  name="CommandTimeout">30</property>
+                <property
+                  dataType="System.Boolean"
+                  description="If true, a special output column called ‘__$reprocessing ’ is added. This output column is true for each data row during the initial processing range, or when the previous CDC run&#xA;was stopped without finishing. The default value is false (the __$reprocessing output column is not generated). This special output column allows the SSIS developer to handle consistency errors differently when working on the Initial Processing Range or the previous CDC run was stopped."
+                  expressionType="Notify"
+                  name="ReprocessingIndication">true</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">Attunity.CdcSourceComponent</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Attività Flusso di dati\CDC Source.Connections[Connection]"
+                  connectionManagerID="Package.ConnectionManagers[lds.di.unipi.it.lbi.lds1]"
+                  connectionManagerRefId="Package.ConnectionManagers[lds.di.unipi.it.lbi.lds1]"
+                  name="Connection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output]"
+                  name="Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$start_lsn]"
+                      dataType="bytes"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$start_lsn]"
+                      length="10"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$start_lsn]"
+                      name="__$start_lsn"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$seqval]"
+                      dataType="bytes"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$seqval]"
+                      length="10"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$seqval]"
+                      name="__$seqval"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$operation]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$operation]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$operation]"
+                      name="__$operation"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$update_mask]"
+                      dataType="bytes"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$update_mask]"
+                      length="128"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$update_mask]"
+                      name="__$update_mask"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[id]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[id]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[id]"
+                      name="id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[age]"
+                      dataType="ui1"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[age]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[age]"
+                      name="age"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[workclass]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[workclass]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[workclass]"
+                      name="workclass"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[fnlwgt]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[fnlwgt]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[fnlwgt]"
+                      name="fnlwgt"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[education]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[education]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[education]"
+                      name="education"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[education_num]"
+                      dataType="ui1"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[education_num]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[education_num]"
+                      name="education_num"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[marital_status]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[marital_status]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[marital_status]"
+                      name="marital_status"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[occupation]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[occupation]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[occupation]"
+                      name="occupation"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[relationship]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[relationship]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[relationship]"
+                      name="relationship"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[race]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[race]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[race]"
+                      name="race"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[sex]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[sex]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[sex]"
+                      name="sex"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[capital_gain]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[capital_gain]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[capital_gain]"
+                      name="capital_gain"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[capital_loss]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[capital_loss]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[capital_loss]"
+                      name="capital_loss"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[hours_per_week]"
+                      dataType="ui1"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[hours_per_week]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[hours_per_week]"
+                      name="hours_per_week"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[native_country]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[native_country]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[native_country]"
+                      name="native_country"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[class]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[class]"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[class]"
+                      name="class"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$command_id]"
+                      dataType="i4"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$command_id]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$command_id]"
+                      name="__$command_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$reprocessing]"
+                      dataType="bool"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$reprocessing]"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$reprocessing]"
+                      name="__$reprocessing"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$start_lsn]"
+                      dataType="bytes"
+                      length="10"
+                      name="__$start_lsn" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$seqval]"
+                      dataType="bytes"
+                      length="10"
+                      name="__$seqval" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$operation]"
+                      dataType="i4"
+                      name="__$operation" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$update_mask]"
+                      dataType="bytes"
+                      length="128"
+                      name="__$update_mask" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[id]"
+                      dataType="i4"
+                      name="id" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[age]"
+                      dataType="ui1"
+                      name="age" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[workclass]"
+                      dataType="wstr"
+                      length="256"
+                      name="workclass" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[fnlwgt]"
+                      dataType="i4"
+                      name="fnlwgt" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[education]"
+                      dataType="wstr"
+                      length="256"
+                      name="education" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[education_num]"
+                      dataType="ui1"
+                      name="education_num" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[marital_status]"
+                      dataType="wstr"
+                      length="256"
+                      name="marital_status" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[occupation]"
+                      dataType="wstr"
+                      length="256"
+                      name="occupation" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[relationship]"
+                      dataType="wstr"
+                      length="256"
+                      name="relationship" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[race]"
+                      dataType="wstr"
+                      length="256"
+                      name="race" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[sex]"
+                      dataType="wstr"
+                      length="256"
+                      name="sex" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[capital_gain]"
+                      dataType="i4"
+                      name="capital_gain" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[capital_loss]"
+                      dataType="i4"
+                      name="capital_loss" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[hours_per_week]"
+                      dataType="ui1"
+                      name="hours_per_week" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[native_country]"
+                      dataType="wstr"
+                      length="256"
+                      name="native_country" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[class]"
+                      dataType="wstr"
+                      length="256"
+                      name="class" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$command_id]"
+                      dataType="i4"
+                      name="__$command_id" />
+                    <externalMetadataColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].ExternalColumns[__$reprocessing]"
+                      dataType="bool"
+                      name="__$reprocessing" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput]"
+                  isErrorOut="true"
+                  name="ErrorOutput">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$start_lsn]"
+                      dataType="bytes"
+                      length="10"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$start_lsn]"
+                      name="__$start_lsn" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$seqval]"
+                      dataType="bytes"
+                      length="10"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$seqval]"
+                      name="__$seqval" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$operation]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$operation]"
+                      name="__$operation" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$update_mask]"
+                      dataType="bytes"
+                      length="128"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$update_mask]"
+                      name="__$update_mask" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[id]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[id]"
+                      name="id" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[age]"
+                      dataType="ui1"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[age]"
+                      name="age" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[workclass]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[workclass]"
+                      name="workclass" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[fnlwgt]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[fnlwgt]"
+                      name="fnlwgt" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[education]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[education]"
+                      name="education" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[education_num]"
+                      dataType="ui1"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[education_num]"
+                      name="education_num" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[marital_status]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[marital_status]"
+                      name="marital_status" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[occupation]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[occupation]"
+                      name="occupation" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[relationship]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[relationship]"
+                      name="relationship" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[race]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[race]"
+                      name="race" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[sex]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[sex]"
+                      name="sex" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[capital_gain]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[capital_gain]"
+                      name="capital_gain" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[capital_loss]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[capital_loss]"
+                      name="capital_loss" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[hours_per_week]"
+                      dataType="ui1"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[hours_per_week]"
+                      name="hours_per_week" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[native_country]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[native_country]"
+                      name="native_country" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[class]"
+                      dataType="wstr"
+                      length="256"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[class]"
+                      name="class" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$command_id]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$command_id]"
+                      name="__$command_id" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$reprocessing]"
+                      dataType="bool"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[ErrorOutput].Columns[__$reprocessing]"
+                      name="__$reprocessing" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Attività Flusso di dati\CDC Splitter"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+              description="Directs a stream of net change records into different outputs based on the type of the change (Insert, Delete and Update). This allows specific handling for different types of change records."
+              name="CDC Splitter"
+              usesDispositions="true"
+              version="9">
+              <properties>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">Attunity.CdcSplitterComponent</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input]"
+                  errorOrTruncationOperation="Operation of the changed row is not a valid one"
+                  errorRowDisposition="FailComponent"
+                  name="Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[__$start_lsn]"
+                      cachedDataType="bytes"
+                      cachedLength="10"
+                      cachedName="__$start_lsn"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$start_lsn]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[__$seqval]"
+                      cachedDataType="bytes"
+                      cachedLength="10"
+                      cachedName="__$seqval"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$seqval]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[__$operation]"
+                      cachedDataType="i4"
+                      cachedName="__$operation"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$operation]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[__$update_mask]"
+                      cachedDataType="bytes"
+                      cachedLength="128"
+                      cachedName="__$update_mask"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$update_mask]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[id]"
+                      cachedDataType="i4"
+                      cachedName="id"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[id]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[age]"
+                      cachedDataType="ui1"
+                      cachedName="age"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[age]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[workclass]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="workclass"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[workclass]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[fnlwgt]"
+                      cachedDataType="i4"
+                      cachedName="fnlwgt"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[fnlwgt]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[education]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="education"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[education]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[education_num]"
+                      cachedDataType="ui1"
+                      cachedName="education_num"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[education_num]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[marital_status]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="marital_status"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[marital_status]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[occupation]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="occupation"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[occupation]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[relationship]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="relationship"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[relationship]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[race]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="race"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[race]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[sex]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="sex"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[sex]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[capital_gain]"
+                      cachedDataType="i4"
+                      cachedName="capital_gain"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[capital_gain]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[capital_loss]"
+                      cachedDataType="i4"
+                      cachedName="capital_loss"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[capital_loss]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[hours_per_week]"
+                      cachedDataType="ui1"
+                      cachedName="hours_per_week"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[hours_per_week]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[native_country]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="native_country"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[native_country]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[class]"
+                      cachedDataType="wstr"
+                      cachedLength="256"
+                      cachedName="class"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[class]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[__$command_id]"
+                      cachedDataType="i4"
+                      cachedName="__$command_id"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$command_id]" />
+                    <inputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input].Columns[__$reprocessing]"
+                      cachedDataType="bool"
+                      cachedName="__$reprocessing"
+                      lineageId="Package\Attività Flusso di dati\CDC Source.Outputs[Output].Columns[__$reprocessing]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Attività Flusso di dati\CDC Splitter.Outputs[InsertOutput]"
+                  exclusionGroup="1"
+                  name="InsertOutput"
+                  synchronousInputId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Insert."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">0</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Attività Flusso di dati\CDC Splitter.Outputs[DeleteOutput]"
+                  exclusionGroup="1"
+                  name="DeleteOutput"
+                  synchronousInputId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Delete."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">2</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Attività Flusso di dati\CDC Splitter.Outputs[UpdateOutput]"
+                  exclusionGroup="1"
+                  name="UpdateOutput"
+                  synchronousInputId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Update."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">1</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Attività Flusso di dati\CDC Splitter.Outputs[ErrorOutput]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="ErrorOutput"
+                  synchronousInputId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input]">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Output type - Error."
+                      name="OutputType"
+                      typeConverter="Attunity.SqlServer.CDCSplit.OutputType">3</property>
+                  </properties>
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Attività Flusso di dati\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Attività Flusso di dati\CDC Splitter.Outputs[ErrorOutput].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Attività Flusso di dati\for INSERT"
+              componentClassID="Microsoft.FlatFileDestination"
+              contactInfo="Destinazione file flat;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Tutti i diritti sono riservati; http://www.microsoft.com/sql/support;1"
+              description="Destinazione file flat"
+              name="for INSERT"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifica se i dati verranno sovrascritti o accodati nel file di destinazione."
+                  name="Overwrite">true</property>
+                <property
+                  dataType="System.String"
+                  description="Specifica il testo da scrivere nel file di destinazione prima della scrittura dei dati."
+                  expressionType="Notify"
+                  name="Header"></property>
+                <property
+                  dataType="System.Boolean"
+                  description="Quando il qualificatore di testo è abilitato, specifica se il qualificatore di testo nei dati scritti nel file di destinazione verrà o meno preceduto da un carattere di escape."
+                  name="EscapeQualifier">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Attività Flusso di dati\for INSERT.Connections[FlatFileConnection]"
+                  name="FlatFileConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Attività Flusso di dati\for INSERT.Inputs[Input destinazione file flat]"
+                  hasSideEffects="true"
+                  name="Input destinazione file flat">
+                  <externalMetadataColumns
+                    isUsed="True" />
+                </input>
+              </inputs>
+            </component>
+            <component
+              refId="Package\Attività Flusso di dati\for UPDATE"
+              componentClassID="Microsoft.FlatFileDestination"
+              contactInfo="Destinazione file flat;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Tutti i diritti sono riservati; http://www.microsoft.com/sql/support;1"
+              description="Destinazione file flat"
+              name="for UPDATE"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifica se i dati verranno sovrascritti o accodati nel file di destinazione."
+                  name="Overwrite">true</property>
+                <property
+                  dataType="System.String"
+                  description="Specifica il testo da scrivere nel file di destinazione prima della scrittura dei dati."
+                  expressionType="Notify"
+                  name="Header"></property>
+                <property
+                  dataType="System.Boolean"
+                  description="Quando il qualificatore di testo è abilitato, specifica se il qualificatore di testo nei dati scritti nel file di destinazione verrà o meno preceduto da un carattere di escape."
+                  name="EscapeQualifier">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Attività Flusso di dati\for UPDATE.Connections[FlatFileConnection]"
+                  name="FlatFileConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Attività Flusso di dati\for UPDATE.Inputs[Input destinazione file flat]"
+                  hasSideEffects="true"
+                  name="Input destinazione file flat">
+                  <externalMetadataColumns
+                    isUsed="True" />
+                </input>
+              </inputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Attività Flusso di dati.Paths[InsertOutput]"
+              endId="Package\Attività Flusso di dati\for INSERT.Inputs[Input destinazione file flat]"
+              name="InsertOutput"
+              startId="Package\Attività Flusso di dati\CDC Splitter.Outputs[InsertOutput]" />
+            <path
+              refId="Package\Attività Flusso di dati.Paths[Output]"
+              endId="Package\Attività Flusso di dati\CDC Splitter.Inputs[Input]"
+              name="Output"
+              startId="Package\Attività Flusso di dati\CDC Source.Outputs[Output]" />
+            <path
+              refId="Package\Attività Flusso di dati.Paths[UpdateOutput]"
+              endId="Package\Attività Flusso di dati\for UPDATE.Inputs[Input destinazione file flat]"
+              name="UpdateOutput"
+              startId="Package\Attività Flusso di dati\CDC Splitter.Outputs[UpdateOutput]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\CDC Control Task"
+      DTS:CreationName="Attunity.CdcControlTask"
+      DTS:Description="CDC Control Task"
+      DTS:DTSID="{6B3F0FD5-1D66-4106-B715-7A44F4ECCD06}"
+      DTS:ExecutableType="Attunity.CdcControlTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="CDC Control Task"
+      DTS:TaskContact="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+      DTS:ThreadHint="1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <CDCControlTask
+          Connection=""
+          TaskOperation="MarkInitialLoadStart"
+          OperationParameter=""
+          StateConnection=""
+          StateVariable=""
+          AutomaticStatePersistence="True"
+          StateName=""
+          StateTable=""
+          CommandTimeout="30"
+          ChangeDetectionRetryInterval="10"
+          ChangeDetectionTimeout="60" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\CDC Control Task  - Get Processing range"
+      DTS:CreationName="Attunity.CdcControlTask"
+      DTS:Description="CDC Control Task"
+      DTS:DTSID="{A5544DC8-7D6C-4713-8934-596B334F98CC}"
+      DTS:ExecutableType="Attunity.CdcControlTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="CDC Control Task  - Get Processing range"
+      DTS:TaskContact="Attunity Ltd.; All Rights Reserved; http://www.attunity.com;"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <CDCControlTask
+          Connection="lds.di.unipi.it.lbi.lds1"
+          TaskOperation="GetProcessingRange"
+          OperationParameter=""
+          StateConnection="lds.di.unipi.it.lbi.lds1"
+          StateVariable="User::CDC_State"
+          AutomaticStatePersistence="True"
+          StateName="CDC_State"
+          StateTable="[dbo].[cdc_states]"
+          CommandTimeout="30"
+          ChangeDetectionRetryInterval="10"
+          ChangeDetectionTimeout="60" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Vincolo]"
+      DTS:CreationName=""
+      DTS:DTSID="{EB17D9F0-8482-41B4-AE60-53B26F2B6CA6}"
+      DTS:From="Package\CDC Control Task  - Get Processing range"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Vincolo"
+      DTS:To="Package\Attività Flusso di dati" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--Questa sezione CDATA contiene le informazioni sul layout del pacchetto e include informazioni quali coordinate (x,y), larghezza e altezza.-->
+<!--Se si modifica manualmente la sezione e si commette un errore, è possibile eliminarla. -->
+<!--Sarà comunque possibile caricare manualmente il pacchetto, ma le informazioni precedenti sul layout verranno perse e gli elementi verranno nuovamente disposti nell'area di progettazione all'interno dell'apposita finestra.-->
+<Objects
+  Version="8">
+  <!--Ogni nodo seguente conterrà proprietà che non influiscono sul comportamento di runtime.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\CDC Control Task"
+          TopLeft="294.166650594109,272.999998101592" />
+        <NodeLayout
+          Size="274.4,41.6"
+          Id="Package\CDC Control Task  - Get Processing range"
+          TopLeft="291.666650730703,43.3333330319988" />
+        <NodeLayout
+          Size="173.6,41.6"
+          Id="Package\Attività Flusso di dati"
+          TopLeft="337.499981559814,147.333332308796" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Vincolo]"
+          TopLeft="426.583316145259,84.9333330319988">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,62.3999992767969"
+              Start="0,0"
+              End="0,54.8999992767969">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,54.8999992767969" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Attività Flusso di dati">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="136.8,41.6"
+          Id="Package\Attività Flusso di dati\CDC Source"
+          TopLeft="360.83331361827,76.2666661363178" />
+        <NodeLayout
+          Size="136,41.6"
+          Id="Package\Attività Flusso di dati\CDC Splitter"
+          TopLeft="361.666646906072,166.399998842875" />
+        <EdgeLayout
+          Id="Package\Attività Flusso di dati.Paths[Output]"
+          TopLeft="429.449980262171,117.866666136318">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48.5333327065574"
+              Start="0,0"
+              End="0,41.0333327065574">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.0333327065574" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="135.2,41.6"
+          Id="Package\Attività Flusso di dati\for UPDATE"
+          TopLeft="213.333321677314,246.133331621753" />
+        <NodeLayout
+          Size="131.2,41.6"
+          Id="Package\Attività Flusso di dati\for INSERT"
+          TopLeft="502.499972544612,254.799998228153" />
+        <EdgeLayout
+          Id="Package\Attività Flusso di dati.Paths[UpdateOutput]"
+          TopLeft="429.666646906072,207.999998842875">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-148.733325228758,38.1333327788777"
+              Start="0,0"
+              End="-148.733325228758,30.6333327788777">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.0666663894388" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,15.0666663894388"
+                    Point2="0,19.0666663894388"
+                    Point3="-4,19.0666663894388" />
+                  <mssgle:LineSegment
+                    End="-144.733325228758,19.0666663894388" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-144.733325228758,19.0666663894388"
+                    Point2="-148.733325228758,19.0666663894388"
+                    Point3="-148.733325228758,23.0666663894388" />
+                  <mssgle:LineSegment
+                    End="-148.733325228758,30.6333327788777" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-105.996994645629,24.0666663894388,63.2606640625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Attività Flusso di dati.Paths[InsertOutput]"
+          TopLeft="450.999980239405,207.999998842875">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="117.099992305206,46.7999993852774"
+              Start="0,0"
+              End="117.099992305206,39.2999993852774">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.0465113777292" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,15.0465113777292"
+                    Point2="0,19.0465113777292"
+                    Point3="4,19.0465113777292" />
+                  <mssgle:LineSegment
+                    End="113.099992305206,19.0465113777292" />
+                  <mssgle:CubicBezierSegment
+                    Point1="113.099992305206,19.0465113777292"
+                    Point2="117.099992305206,19.0465113777292"
+                    Point3="117.099992305206,23.0465113777292" />
+                  <mssgle:LineSegment
+                    End="117.099992305206,39.2999993852774" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="29.5720078713531,24.0465113777292,57.9559765625,11.43359375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Attività Flusso di dati\CDC Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
